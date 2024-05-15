@@ -105,11 +105,12 @@ public class DataHandler extends AbstractHandler {
                         logger.debug("Read partial payload with {} bytes, total {} bytes", n, count);
                     }
                     if (n == 0 && waitProvider != null) {
-                        waitProvider.wait(1);
+                        waitProvider.wait(100);
                     }
                 }
                 long endTime = System.nanoTime();
                 DataHandler.this.stream.setEnd_time((double) (endTime - startTime) / NANOS_TO_SECONDS);
+                DataHandler.this.stream.setBytes(count);
                 logger.info("Read payload with {} bytes at {}s.", count, DataHandler.this.stream.getEnd_time());
                 dataHandlersStopped.countDown();
             } catch (Exception e) {

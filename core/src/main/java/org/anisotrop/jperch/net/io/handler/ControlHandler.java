@@ -1,6 +1,8 @@
 package org.anisotrop.jperch.net.io.handler;
 
 import com.google.gson.Gson;
+import org.anisotrop.jperch.net.io.results.Result;
+import org.anisotrop.jperch.net.io.results.Stream;
 
 import java.io.DataInputStream;
 import java.io.OutputStream;
@@ -15,6 +17,8 @@ import java.util.regex.Pattern;
 public class ControlHandler extends AbstractHandler implements Runnable {
 
     private static final Gson gson = new Gson();
+
+    private Result testResult;
 
     public static final int COOKIE_SIZE = 37;
     public static final int IN_BUFFER_SIZE = 1024;
@@ -93,11 +97,21 @@ public class ControlHandler extends AbstractHandler implements Runnable {
             String results = new String(bResults);
             logger.info("Results: {}", results);
 
-            //gson.toJson(new Result());
+            Result clientResults = gson.fromJson(results, Result.class);
 
-            byte[] lenResultsOut = ByteBuffer.allocate(4).putInt(lenResults).array();
+            // Hack: overriding the stream ids as we don't have them when communication starts
+            // TODO: make sure results are complete when sending them
+            int i = 0;
+            for (Stream s: testResult.getStreams()) {
+                s.setId(clientResults.getStream(i++).getId());
+            }
+
+            String serverResults = gson.toJson(testResult);
+            logger.info("Server Result: {}", serverResults);
+
+            byte[] lenResultsOut = ByteBuffer.allocate(4).putInt(serverResults.length()).array();
             out.write(lenResultsOut);
-            out.write(bResults);
+            out.write(serverResults.getBytes());
             out.flush();
 
             logger.info("Test is finished");
@@ -128,6 +142,10 @@ public class ControlHandler extends AbstractHandler implements Runnable {
 
     public byte[] getTestCookie() {
         return testCookie;
+    }
+
+    public void setTestResult(Result testResult) {
+        this.testResult = testResult;
     }
 }
 

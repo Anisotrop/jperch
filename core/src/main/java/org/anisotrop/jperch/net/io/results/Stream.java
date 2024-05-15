@@ -23,7 +23,7 @@ public class Stream {
     private long packets;
     private double start_time;
     private double end_time;
-    private AtomicLong currentBytes = new AtomicLong();
+    private transient AtomicLong currentBytes = new AtomicLong();
 
     public long getId() {
         return id;

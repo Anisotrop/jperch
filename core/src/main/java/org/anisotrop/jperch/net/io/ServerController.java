@@ -31,6 +31,7 @@ class ServerController {
                 ExecutorService executor = getExecutorService(useNativeThreads, parallelStreams);
                 try {
                     Result testResult = new Result(parallelStreams);
+                    controlHandler.setTestResult(testResult);
                     List<DataHandler> dataHandlers = startDataHandlers(serverSocket, parallelStreams, controlHandler, executor, testResult);
                     LOGGER.info("Launching test and protecting from other clients");
                     TestGuard testGuard = new TestGuard(serverSocket);
