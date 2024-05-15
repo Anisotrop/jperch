@@ -7,7 +7,7 @@
     <parent>
 		<groupId>org.anisotrop.jperch</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>app21</artifactId>
 	<packaging>jar</packaging>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.anisotrop.jperch</groupId>
             <artifactId>lib21</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
